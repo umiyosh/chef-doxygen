@@ -1,2 +1,2 @@
-node[:doxygen][:options] = []
-node[:doxygen][:force_recompile] = false
+node.default[:doxygen][:options] = []
+node.default[:doxygen][:force_recompile] = false
