@@ -1,22 +1,17 @@
-def get_doxygen_options()
-  temp = []
-  node[:doxygen][:options].sort.each do |key, val|
-    if val == true
-      temp.push("--"+key)
-    elsif val == false
-    else
-      temp.push("--"+key+"="+val)
-    end
+doxygen_options = node.to_hash['doxygen'].to_hash['options'].sort.find_all do |key, val|
+  !val.nil? || val != false
+end.map do |key, val|
+  if val == true
+    "--key"
+  else
+    "--key" + key + "=" + val
   end
-  return temp.join(" ")
-end
+end.join " "
 
 git "/home/vagrant/doxygen" do
   repository "git://github.com/doxygen/doxygen.git"
   user "vagrant"
-  if node[:doxygen].has_key?("version")
-    resource node[:doxygen][:version]
-  end
+  checkout_branch node['doxygen']['version']
   action :sync
   notifies :run, "bash[config_doxygen]", :immediately
 end
@@ -32,16 +27,12 @@ bash "config_doxygen" do
     make distclean
     git pull
     ./configure
-    ./configure #{get_doxygen_options()}
+    ./configure #{doxygen_options}
     make
   EOH
-  if node[:doxygen][:force_recompile] = true
-    action :run
-  else
-    action :nothing
-  end
+  action :run
   notifies :run, "bash[install_doxygen]", :immediately
-
+  only_if do node['doxygen']['force_recompile'] == true end
 end
 
 bash "install_doxygen" do
