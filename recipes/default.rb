@@ -2,9 +2,9 @@ doxygen_options = node.to_hash['doxygen'].to_hash['options'].sort.find_all do |k
   !val.nil? || val != false
 end.map do |key, val|
   if val == true
-    "--key"
+    "--#{key}"
   else
-    "--key" + key + "=" + val
+    "--#{key}" + "=" + val
   end
 end.join " "
 
@@ -30,9 +30,12 @@ bash "config_doxygen" do
     ./configure #{doxygen_options}
     make
   EOH
-  action :run
+  if node["doxygen"]["force_recompile"] == true
+    action :run
+  else
+    action :nothing
+  end
   notifies :run, "bash[install_doxygen]", :immediately
-  only_if do node['doxygen']['force_recompile'] == true end
 end
 
 bash "install_doxygen" do
