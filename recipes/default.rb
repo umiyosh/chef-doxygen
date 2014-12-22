@@ -24,11 +24,6 @@ bash "config_doxygen" do
     git checkout master
     ./configure
     make
-    make distclean
-    git pull
-    ./configure
-    ./configure #{doxygen_options}
-    make
   EOH
   if node["doxygen"]["force_recompile"] == true
     action :run
