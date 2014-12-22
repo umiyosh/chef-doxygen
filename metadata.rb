@@ -1,4 +1,4 @@
-name             'doxygen'
+name             'chef-doxygen'
 maintainer       'Travis A. Everett'
 maintainer_email 'travis.a.everett@gmail.com'
 license          'Apache 2.0'
