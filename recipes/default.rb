@@ -8,6 +8,10 @@ end.map do |key, val|
   end
 end.join " "
 
+package "flex" do
+  action :install
+end
+
 git "/home/vagrant/doxygen" do
   repository "git://github.com/doxygen/doxygen.git"
   user "vagrant"
