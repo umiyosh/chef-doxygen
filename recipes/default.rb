@@ -8,8 +8,10 @@ end.map do |key, val|
   end
 end.join " "
 
-package "flex" do
-  action :install
+%w{flex bison}.each do |p|
+  package p do
+    action :install
+  end
 end
 
 git "/home/vagrant/doxygen" do
